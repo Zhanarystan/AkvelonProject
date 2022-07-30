@@ -1,6 +1,6 @@
 "AkvelonProject" 
 
-Run following commands
+Run following commands:
 git clone https://github.com/Zhanarystan/AkvelonProject.git
 
 After clonning completion get into project root directory and run command :
