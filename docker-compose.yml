@@ -1,0 +1,45 @@
+version: '3.4'
+
+services:
+  postgredb:
+    image: postgres
+    container_name: postgredb
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=PostgreDB
+    restart: always
+    ports: 
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment: 
+      - PGADMIN_DEFAULT_EMAIL=admin@aspnetrun.com
+      - PGADMIN_DEFAULT_PASSWORD=admin1234
+    restart: always
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/root/.pgadmin
+
+  api:
+    image: ${DOCKER_REGISTRY-}api
+    build: 
+      context: .
+      dockerfile: AkvelonTask/Dockerfile
+    container_name: api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=DEVELOPMENT
+      - "ConnectionStrings:DatabaseConnection=Server=postgredb;Port=5432;Database=PostgreDB;User Id=admin;Password=admin1234;"
+    depends_on:
+      - postgredb
+    ports:
+      - "8001:80"
+
+volumes:
+  postgres_data:
+  pgadmin_data:
